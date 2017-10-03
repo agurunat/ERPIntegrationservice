@@ -1,0 +1,135 @@
+/*
+ * ERPIntegrationservice sample code to consume SOAP service
+ * for Oracle Cloud External Data Integration
+ * 
+ */
+package erpauth;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.BufferedReader;
+import java.io.FileOutputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import com.sun.org.apache.xml.internal.security.utils.Base64;
+import javax.net.ssl.*;
+import javax.xml.soap.*;
+import javax.xml.transform.Source;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
+import java.io.FileInputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.security.SecureRandom;
+import java.security.Security;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
+import java.util.Iterator;
+import java.util.Vector;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
+
+
+
+public class ERPAuth {
+
+    /**
+     * @param args the command line arguments
+     */
+public static void http_client() throws Exception {
+    try {
+        System.out.println("Invoke service using direct HTTP call with Basic Auth");
+        String payload = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:typ=\"http://xmlns.oracle.com/apps/financials/commonModules/shared/model/erpIntegrationService/types/\" xmlns:erp=\"http://xmlns.oracle.com/apps/financials/commonModules/shared/model/erpIntegrationService/\">\n" +
+"   <soapenv:Header/>\n" +
+"   <soapenv:Body>\n" +
+"      <typ:uploadFileToUcm>\n" +
+"         <typ:document>\n" +
+"            <erp:Content>Place GL Journals encoded to Base64 key</erp:Content>\n" +
+"            <erp:FileName>GlInterface.zip</erp:FileName>\n" +
+"            <erp:ContentType>zip</erp:ContentType>\n" +
+"            <erp:DocumentTitle>Enter a unique Title</erp:DocumentTitle>\n" +
+"            <erp:DocumentAuthor>Author or username</erp:DocumentAuthor>\n" +
+"            <erp:DocumentSecurityGroup>FAFusionImportExport</erp:DocumentSecurityGroup>\n" +
+"            <erp:DocumentAccount>fin$/generalLedger$/import$</erp:DocumentAccount>\n" +
+"            <erp:DocumentName>10 digit unique number</erp:DocumentName>\n" +
+"            <erp:DocumentId>#NULL</erp:DocumentId>\n" +
+"         </typ:document>\n" +
+"      </typ:uploadFileToUcm>\n" +
+"   </soapenv:Body>\n" +
+"</soapenv:Envelope>";
+    httpPost("https://<URL of Cloud>/publicFinancialCommonErpIntegration/ErpIntegrationService?invoke=",payload,"username:password");
+    } catch(Exception e){
+        System.out.println ("Exception in HTTPPOST");
+        e.printStackTrace();
+        throw e;
+    }         
+   
+    }
+ private static String httpPost(String destUrl, String postData,
+                                   String authStr) throws Exception {
+        URL url = new URL(destUrl);
+        HttpURLConnection conn = (HttpURLConnection)url.openConnection();
+        if (conn == null) {
+            return null;
+        }
+        conn.setRequestProperty("Content-Type", "text/xml; charset=UTF-8");
+        conn.setDoOutput(true);
+        conn.setDoInput(true);
+        conn.setUseCaches(false);
+        conn.setFollowRedirects(true);
+        conn.setAllowUserInteraction(false);
+        conn.setRequestMethod("POST"); 
+
+        byte[] authBytes = authStr.getBytes("UTF-8");
+        String auth = com.sun.org.apache.xml.internal.security.utils.Base64.encode(authBytes);
+        conn.setRequestProperty("Authorization", "Basic " + auth);
+        System.out.println("Auth :"+ auth);
+ 
+        OutputStream out = conn.getOutputStream();
+        OutputStreamWriter writer = new OutputStreamWriter(out, "UTF-8");
+        writer.write(postData);
+        writer.close();
+        out.close();
+
+        System.out.println("connection status: " + conn.getResponseCode() +
+                           "; connection response: " +
+                           conn.getResponseMessage());
+
+        InputStream in = conn.getInputStream();
+        InputStreamReader iReader = new InputStreamReader(in);
+        BufferedReader bReader = new BufferedReader(iReader);
+
+        String line;
+        String response = "";
+        System.out.println("==================Service response: ================ ");
+        while ((line = bReader.readLine()) != null) {
+            System.out.println(line);
+            response += line;
+        }
+        iReader.close();
+        bReader.close();
+        in.close();
+        conn.disconnect();
+ 
+
+        return response;
+        
+        
+    }   
+    
+    public static void main(String[] args) throws Exception {
+        // TODO code application logic here
+        System.out.println ("In Main");
+        http_client();
+     }
+    
+}
