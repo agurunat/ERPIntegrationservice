@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ExportedDefinition>
+  <AI_NAME>Download Test Cases From ALM using Test ID from Test Lab</AI_NAME>
+  <AI_DESCRIPTION>
+  </AI_DESCRIPTION>
+  <AnalysisDefinition Version="3.0">
+    <ExcelReportXml>
+      <Report>
+        <QueryBuilder MaxRecords="8">
+          <Sheet SheetName="Records" DataFetchScript="--Report fetched only Executed test cases (Passed, Failed, Not Completed, NA)-- No Run will not be reported--&#xA;--Input the test lab test set ID--&#xA;&#xA;SELECT&#xA;CY_CYCLE_ID as &quot;Test ID&quot;,&#xA;CF_ITEM_NAME as &quot;Test Set Folder Name&quot;,&#xA;CY_CYCLE as &quot;Test Set Name&quot;,&#xA;RN_TESTER_NAME as &quot;Tester Name&quot;  ,&#xA;TS_NAME as &quot;Test Case Name&quot;,&#xA;TS_DESCRIPTION as &quot;Test Case Description&quot;,&#xA;RN_STATUS as &quot;Test Case Status&quot; ,&#xA;ST_EXECUTION_DATE as &quot;Execution Date&quot;, /*Test Step.Exec Date*/&#xA;ST_STEP_NAME as &quot;Test Step No&quot;,&#xA;ST_DESCRIPTION as &quot;Test Step Description&quot;,&#xA;ST_EXPECTED as &quot;Test Step Expected&quot;,&#xA;ST_ACTUAL as &quot;Test Step Actual&quot;,&#xA;ST_STATUS as &quot;Test Step Status&quot;&#xA;&#xA;FROM   step f,Testcycl a, TEST b, CYCLE c,RUN d,CYCL_FOLD e&#xA;where&#xA;&#xA;f.ST_TEST_ID=b.TS_TEST_ID and&#xA;e.CF_ITEM_ID=c.CY_FOLDER_ID and&#xA;a.TC_CYCLE_ID=c.CY_CYCLE_ID and&#xA;a.TC_TEST_ID=b.TS_TEST_ID     and&#xA;c.CY_CYCLE_ID=d.RN_CYCLE_ID   and&#xA;b.ts_test_id=d.rn_TEST_ID and&#xA;f.st_run_id=d.rn_run_id and&#xA;--and CF_ITEM_PATH like '%AAAAACAAA%'&#xA;and  c.CY_CYCLE_ID /*Test Set.Test Set ID*/  in(1218, 1219)/*provide the test lab test set ID here*/&#xA;&#xA;--and /*Provide the Path of the test lab folder from query 1 in CF_ITEM_PATH field*/&#xA;--CY_CYCLE like '%%' /* Provide the test lab test set name in CY_CYCLE field */" DataFetchMethod="StandardSQL" RealSql="--Report fetched only Executed test cases (Passed, Failed, Not Completed, NA)-- No Run will not be reported--&#xA;--Input the test lab test set ID--&#xA;&#xA;SELECT&#xA;CY_CYCLE_ID as &quot;Test ID&quot;,&#xA;CF_ITEM_NAME as &quot;Test Set Folder Name&quot;,&#xA;CY_CYCLE as &quot;Test Set Name&quot;,&#xA;RN_TESTER_NAME as &quot;Tester Name&quot;  ,&#xA;TS_NAME as &quot;Test Case Name&quot;,&#xA;TS_DESCRIPTION as &quot;Test Case Description&quot;,&#xA;RN_STATUS as &quot;Test Case Status&quot; ,&#xA;ST_EXECUTION_DATE as &quot;Execution Date&quot;, /*Test Step.Exec Date*/&#xA;ST_STEP_NAME as &quot;Test Step No&quot;,&#xA;ST_DESCRIPTION as &quot;Test Step Description&quot;,&#xA;ST_EXPECTED as &quot;Test Step Expected&quot;,&#xA;ST_ACTUAL as &quot;Test Step Actual&quot;,&#xA;ST_STATUS as &quot;Test Step Status&quot;&#xA;&#xA;FROM   step f,Testcycl a, TEST b, CYCLE c,RUN d,CYCL_FOLD e&#xA;where&#xA;&#xA;f.ST_TEST_ID=b.TS_TEST_ID and&#xA;e.CF_ITEM_ID=c.CY_FOLDER_ID and&#xA;a.TC_CYCLE_ID=c.CY_CYCLE_ID and&#xA;a.TC_TEST_ID=b.TS_TEST_ID     and&#xA;c.CY_CYCLE_ID=d.RN_CYCLE_ID   and&#xA;b.ts_test_id=d.rn_TEST_ID and&#xA;f.st_run_id=d.rn_run_id and&#xA;--and CF_ITEM_PATH like '%AAAAACAAA%'&#xA;and  c.CY_CYCLE_ID /*Test Set.Test Set ID*/  in(1218, 1219)/*provide the test lab test set ID here*/&#xA;&#xA;--and /*Provide the Path of the test lab folder from query 1 in CF_ITEM_PATH field*/&#xA;--CY_CYCLE like '%%' /* Provide the test lab test set name in CY_CYCLE field */" />
+          <GlobalParameters />
+        </QueryBuilder>
+        <PostProcessBuilder Script="Sub QC_PostProcessing()&#xA;Dim MainWorksheet As Worksheet&#xA;' Make sure your worksheet name matches!&#xA;Set MainWorksheet = ActiveWorkbook.Worksheets(&quot;Query1&quot;)&#xA;Dim DataRange As Range&#xA;Set DataRange = MainWorksheet.UsedRange&#xA;' Now that you have the data in DataRange you can process it.&#xA;End Sub" RunPostProcessing="False">
+        </PostProcessBuilder>
+        <ReportGenerator Open="True" SavedFile="Test Cases Download.xls" OutputFormat="Excel" Status="1">
+        </ReportGenerator>
+      </Report>
+    </ExcelReportXml>
+  </AnalysisDefinition>
+</ExportedDefinition>

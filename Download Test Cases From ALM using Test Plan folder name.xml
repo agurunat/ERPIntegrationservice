@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ExportedDefinition>
+  <AI_NAME>Download Test Cases From ALM using Test Plan folder name</AI_NAME>
+  <AI_DESCRIPTION>
+  </AI_DESCRIPTION>
+  <AnalysisDefinition Version="3.0">
+    <ExcelReportXml>
+      <Report>
+        <QueryBuilder MaxRecords="8">
+          <Sheet SheetName="Records" DataFetchScript="-- Included All test cases from Test Plan folder--   Input the test plan folder name--&#xA;&#xA;SELECT&#xA; --ALL_LISTS.AL_FATHER_ID /*Test Plan Folder.Parent Folder*/ ,&#xA; -- ALL_LISTS.AL_ITEM_ID /*Test Plan Folder.Item Id*/ ,&#xA;ALL_LISTS.AL_DESCRIPTION as Scenario ,&#xA;TEST.TS_CREATION_DATE /*Test.Creation Date*/ as Creation_Date,&#xA;TEST.TS_RESPONSIBLE /*Test.Designer*/as Designer  ,&#xA;TS_NAME as Test_Name,&#xA;TS_DESCRIPTION as Test_Description,&#xA;DS_STEP_NAME as Step_No,&#xA;DS_DESCRIPTION as Step_Description,&#xA;DS_EXPECTED as Expected_Results&#xA;&#xA;FROM TEST, DESSTEPS, ALL_LISTS   , RUN&#xA;&#xA;where TEST.TS_TEST_ID = DESSTEPS.DS_TEST_ID&#xA;AND  AL_ITEM_ID = TS_SUBJECT&#xA;AND TS_SUBJECT = ALL_LISTS.AL_ITEM_ID&#xA;and  ALL_LISTS.AL_DESCRIPTION in('CR837 02 Functional Testing') --Provide Test Plan folder name--&#xA;&#xA;--and   TS_TEST_ID in (1218,1219)&#xA;ORDER BY TS_TEST_ID,  DESSTEPS.DS_STEP_ORDER" DataFetchMethod="StandardSQL" RealSql="-- Included All test cases from Test Plan folder--   Input the test plan folder name--&#xA;&#xA;SELECT&#xA; --ALL_LISTS.AL_FATHER_ID /*Test Plan Folder.Parent Folder*/ ,&#xA; -- ALL_LISTS.AL_ITEM_ID /*Test Plan Folder.Item Id*/ ,&#xA;ALL_LISTS.AL_DESCRIPTION as Scenario ,&#xA;TEST.TS_CREATION_DATE /*Test.Creation Date*/ as Creation_Date,&#xA;TEST.TS_RESPONSIBLE /*Test.Designer*/as Designer  ,&#xA;TS_NAME as Test_Name,&#xA;TS_DESCRIPTION as Test_Description,&#xA;DS_STEP_NAME as Step_No,&#xA;DS_DESCRIPTION as Step_Description,&#xA;DS_EXPECTED as Expected_Results&#xA;&#xA;FROM TEST, DESSTEPS, ALL_LISTS   , RUN&#xA;&#xA;where TEST.TS_TEST_ID = DESSTEPS.DS_TEST_ID&#xA;AND  AL_ITEM_ID = TS_SUBJECT&#xA;AND TS_SUBJECT = ALL_LISTS.AL_ITEM_ID&#xA;and  ALL_LISTS.AL_DESCRIPTION in('CR837 02 Functional Testing') --Provide Test Plan folder name--&#xA;&#xA;--and   TS_TEST_ID in (1218,1219)&#xA;ORDER BY TS_TEST_ID,  DESSTEPS.DS_STEP_ORDER" />
+          <GlobalParameters />
+        </QueryBuilder>
+        <PostProcessBuilder Script="Sub QC_PostProcessing()&#xA;Dim MainWorksheet As Worksheet&#xA;' Make sure your worksheet name matches!&#xA;Set MainWorksheet = ActiveWorkbook.Worksheets(&quot;Query1&quot;)&#xA;Dim DataRange As Range&#xA;Set DataRange = MainWorksheet.UsedRange&#xA;' Now that you have the data in DataRange you can process it.&#xA;End Sub" RunPostProcessing="False">
+        </PostProcessBuilder>
+        <ReportGenerator Open="True" SavedFile="Test Cases Download.xls" OutputFormat="Excel" Status="1">
+        </ReportGenerator>
+      </Report>
+    </ExcelReportXml>
+  </AnalysisDefinition>
+</ExportedDefinition>
